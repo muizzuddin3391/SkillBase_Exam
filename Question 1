@@ -1,0 +1,35 @@
+import socket
+
+def send_student_id_to_server(student_id):
+    # Server information
+    server_address = 'izani.synology.me'
+    server_port = 8443
+
+    # Connect to the server
+    try:
+        client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_socket.connect((server_address, server_port))
+    except socket.error as e:
+        print(f"Error connecting to the server: {e}")
+        return
+
+    # Send UiTM Student ID to the server
+    try:
+        client_socket.sendall(student_id.encode())
+    except socket.error as e:
+        print(f"Error sending data to the server: {e}")
+        client_socket.close()
+        return
+
+    # Receive and read the server response
+    try:
+        response = client_socket.recv(1024)
+        print("Server response:", response.decode())
+    except socket.error as e:
+        print(f"Error receiving data from the server: {e}")
+    finally:
+        client_socket.close()
+
+if __name__ == "__main__":
+    student_id = "2022879802"
+    send_student_id_to_server(student_id)
